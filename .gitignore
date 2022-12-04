@@ -131,9 +131,11 @@ dmypy.json
 # Pycharm
 .idea/
 
-# Images
+# Directories
 /images
 /img
+/accuracy
+/cosine
 
 # npy file
 *.npy
