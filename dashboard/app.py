@@ -1,10 +1,8 @@
 import dash_bootstrap_components as dbc
-
 from dash import Dash, Input, Output, State, dcc, html
-import dashboard1, dashboard2
 
-import warnings
-#warnings.filterwarnings("ignore")
+import dashboard1
+import dashboard2
 
 
 app = Dash(external_stylesheets=[dbc.themes.FLATLY], suppress_callback_exceptions=True)
@@ -15,13 +13,12 @@ nav_contents = dbc.Nav(
         dbc.NavItem(dbc.NavLink("Dashboard 1", href="/dashboard1", active="exact")),
         dbc.NavItem(dbc.NavLink("DashBoard 2", href="/dashboard2", active="exact")),
     ],
-    className="ms-auto", 
+    className="ms-auto",
     navbar=True
 )
 
 app.layout = html.Div(
     [
-
         dbc.Navbar(
             dbc.Container(
                 [
@@ -30,7 +27,7 @@ app.layout = html.Div(
                         dbc.Row(
                             [
                                 dbc.Col(dbc.NavbarBrand("Dashboard", className="ms-2")),
-                                dbc.Col(dbc.Nav(nav_contents, className="ms-2"),)
+                                dbc.Col(dbc.Nav(nav_contents, className="ms-2"), )
                             ],
                             align="center",
                             className="g-0",
@@ -39,23 +36,22 @@ app.layout = html.Div(
                         style={"textDecoration": "none"},
                     ),
                     dbc.NavbarToggler(id="navbar-toggler", n_clicks=0),
-                    #dbc.Nav(nav_contents),
+                    # dbc.Nav(nav_contents),
                 ]
             ),
             color="dark",
             dark=True,
         ),
 
-
         dcc.Location(id="url"),
         dbc.Container(id="page-content", className="pt-4", fluid=True),
     ]
 )
 
-@app.callback(Output("page-content", "children"), 
+
+@app.callback(Output("page-content", "children"),
               Input("url", "pathname"))
 def render_page_content(pathname):
-
     if pathname == "/":
         return dashboard1.serve_layout()
     elif pathname == "/dashboard1":
@@ -72,6 +68,7 @@ def render_page_content(pathname):
         ]
     )
 
+
 # add callback for toggling the collapse on small screens
 @app.callback(
     Output("navbar-collapse", "is_open"),
@@ -83,6 +80,6 @@ def toggle_navbar_collapse(n, is_open):
         return not is_open
     return is_open
 
+
 if __name__ == '__main__':
     app.run_server(debug=True)
-
