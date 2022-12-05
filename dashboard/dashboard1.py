@@ -8,19 +8,33 @@ from dash import Input, Output, html, callback, callback_context, dcc
 from generate_graphs import find_clusters, generate_main_graph, generate_cluster_graph
 from PIL import Image
 
-vectors = np.load('vectors.npy')
-names = list(map(lambda image_name: image_name[6:-4], sorted(glob.glob('./img/*'))))
-clusters = find_clusters(vectors, names, 'cosine', 0.2)
+vectors = np.load('../vectors/vectors_google_1.npy')
+names = list(map(lambda image_name: image_name[6:-4], sorted(glob.glob('../img/*'))))
+clusters = find_clusters(vectors, names, 'cosine', 0.3)
 
 
 def serve_layout():
+    limit = dcc.Slider(0, 0.7, 0.05,
+               value=0.3,
+               id='limit-slider'
+    )
+    models = sorted(glob.glob("../vectors/*.npy"))
+    model_choice = dcc.Dropdown([m for m in models], "../vectors/vectors_google_1.npy",
+                                id='model-choice-1',
+                                style={'font-size': 15, 'width': '100%'})
+    cluster_limit = dcc.Slider(0, 0.4, 0.05,
+               value=0.2,
+               id='cluster-limit-slider'
+    )
+
     Card_1 = dbc.Card([
         dbc.CardHeader("Main graph", style={"text-align": "center"}),
+        dbc.Row(limit),
         html.Div([
             cyto.Cytoscape(
                 id='main_graph',
                 layout={'name': 'circle'},
-                style={'width': '100%', 'height': '600px'},
+                style={'width': '100%', 'height': '500px'},
                 elements=generate_main_graph(clusters)
             )
         ]),
@@ -37,12 +51,13 @@ def serve_layout():
 
     Card_2 = dbc.Card([
         dbc.CardHeader("Card_2", id="card-2", style={"text-align": "center"}),
+        dbc.Row(cluster_limit),
         html.Div([
             cyto.Cytoscape(
                 id='clusters_graph',
                 layout={'name': 'circle'},
-                style={'width': '100%', 'height': '600px'},
-                elements=generate_cluster_graph(clusters, "Humain")
+                style={'width': '100%', 'height': '250px'},
+                elements=generate_cluster_graph(clusters, "Humain", 0.2)
             )
         ]),
         dcc.Dropdown(
@@ -54,6 +69,11 @@ def serve_layout():
                 for name in ['grid', 'random', 'circle', 'cose', 'concentric']
             ]
         ),
+    ])
+
+    Card_3 = dbc.Card([
+        dbc.CardHeader("Confusion Matrix", id="card-3", style={"text-align": "center"}),
+        #heatmap
     ])
 
     modal = html.Div(
@@ -70,6 +90,8 @@ def serve_layout():
     )
 
     layout = html.Div([
+        dbc.Row(model_choice),
+        html.Br(),
         dbc.Row(
             [
                 dbc.Col(
@@ -80,7 +102,8 @@ def serve_layout():
                 ),
                 dbc.Col(
                     [
-                        Card_2
+                        dbc.Row(Card_2),
+                        dbc.Row(Card_3),
                     ]
                 ),
             ],
@@ -93,12 +116,19 @@ def serve_layout():
 
 @callback(Output('clusters_graph', 'elements'),
           Output('card-2', 'children'),
-          Input('main_graph', 'tapNode'))
-def update_cluster(node):
+          Output('card-3', 'children'),
+          Input('main_graph', 'tapNode'),
+          Input('model-choice-1', 'value'),
+          Input('cluster-limit-slider', 'value'))
+def update_cluster(node, value, limit):
+    vectors = np.load(value)
+    names = list(map(lambda image_name: image_name[6:-4], sorted(glob.glob('../img/*'))))
+    clusters = find_clusters(vectors, names, 'cosine', limit)
     if node is not None:
         cluster_type = re.search(r'[a-zA-Z]+', str(node['data']['id'])).group()
-        return generate_cluster_graph(clusters, cluster_type), cluster_type
-    return generate_cluster_graph(clusters, "Humain"), "Humain"
+        return generate_cluster_graph(clusters, cluster_type, limit), cluster_type, f"Confusion matrix for {cluster_type}"
+    
+    return generate_cluster_graph(clusters, "Humain", limit), "Humain", "Confusion matrix for Humain"
 
 
 @callback(Output('main_graph', 'layout'),
@@ -130,13 +160,24 @@ def toggle_modal(node1, node2):
     if input_id == "clusters_graph":
         if node2 is not None:
             if node2['classes'] == 'img_node':
-                image = Image.open("./img/" + node2['data']['id'] + ".jpg")
+                image = Image.open("../img/" + node2['data']['id'] + ".jpg")
                 return True, html.Img(src=image, width='100%', alt='image')
             return False, " "
     elif input_id == "main_graph":
         if node1 is not None:
             if node1['classes'] == 'img_node':
-                image = Image.open("./img/" + node1['data']['id'] + ".jpg")
+                image = Image.open("../img/" + node1['data']['id'] + ".jpg")
                 return True, html.Img(src=image, width='100%', alt='image')
             return False, " "
     return False, " "
+
+@callback(Output('main_graph', 'elements'),
+          Input('model-choice-1', 'value'),
+          Input('limit-slider','value'))
+def update_model_dash1(value, limit):
+    vectors = np.load(value)
+    names = list(map(lambda image_name: image_name[6:-4], sorted(glob.glob('../img/*'))))
+    clusters = find_clusters(vectors, names, 'cosine', limit)
+    return generate_main_graph(clusters)
+
+

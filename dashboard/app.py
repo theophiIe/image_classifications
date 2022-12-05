@@ -12,6 +12,7 @@ nav_contents = dbc.Nav(
     [
         dbc.NavItem(dbc.NavLink("Dashboard 1", href="/dashboard1", active="exact")),
         dbc.NavItem(dbc.NavLink("DashBoard 2", href="/dashboard2", active="exact")),
+        dbc.NavItem(dbc.NavLink("DashBoard 3", href="/dashboard3", active="exact")),
     ],
     className="ms-auto",
     navbar=True

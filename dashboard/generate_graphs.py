@@ -30,7 +30,7 @@ def find_clusters(vectors, names, metric, limit):
 
 def generate_main_graph(cluster):
     cyto_nodes = []
-    colors = ['red', 'blue', 'green', 'yellow', 'violet']
+    colors = ['red', 'blue', 'green', 'orange', 'violet']
     for key, values in cluster.items():
         indice_key = list(cluster.keys()).index(key)
         cyto_nodes.append({'data': {'id': key, 'label': key.capitalize()},
@@ -58,9 +58,9 @@ def generate_main_graph(cluster):
     return cyto_nodes + cyto_edges
 
 
-def generate_cluster_graph(cluster, cluster_type):
+def generate_cluster_graph(cluster, cluster_type, limit):
     cyto_nodes = []
-    colors = ['red', 'blue', 'green', 'yellow', 'violet']
+    colors = ['red', 'blue', 'green', 'orange', 'violet']
     for key, values in cluster.items():
         if key == cluster_type:
             indice_key = list(cluster.keys()).index(key)
@@ -80,7 +80,7 @@ def generate_cluster_graph(cluster, cluster_type):
                     for d2 in values:
                         for k2, v2 in d2.items():
                             d = distance.cdist([v], [v2], 'cosine')[0]
-                            if 0.2 > d[0] > 0.0001:
+                            if limit > d[0] > 0.0001:
                                 cyto_edges.append({'data': {'source': k, 'target': k2},
                                                    'classes': 'edge',
                                                    'style': {'line-color': colors[indice_key]}})
