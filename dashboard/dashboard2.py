@@ -8,8 +8,8 @@ from dash import Input, Output, html, callback, dcc
 
 
 def serve_layout():
-    df_accuracy = pd.read_csv('./accuracy/accuracy_1.csv')
-    df_cosine = pd.read_csv('./cosine/cosine_1.csv')
+    df_accuracy = pd.read_csv('./accuracy/accuracy_1.csv', index_col=[0])
+    df_cosine = pd.read_csv('./cosine/cosine_1.csv', index_col=[0])
 
     fig1 = px.line(df_accuracy, x="limit", y="score")
     fig2 = px.imshow(df_cosine, text_auto=True, aspect="auto")
@@ -58,9 +58,10 @@ def serve_layout():
           Output('matrix', 'figure'),
           Input('model-choice', 'value'))
 def update_model(value):
-    index = re.search(r'[0-9]+', value).group() if value is not None else 1
-    df_accuracy = pd.read_csv(f'./accuracy/accuracy_{index}.csv')
-    df_cosine = pd.read_csv(f'./cosine/cosine_{index}.csv')
+    index = re.search(r'[0-9]+', value).group() if value is not None and value != "" else 1
+
+    df_accuracy = pd.read_csv(f'./accuracy/accuracy_{index}.csv', index_col=[0])
+    df_cosine = pd.read_csv(f'./cosine/cosine_{index}.csv', index_col=[0])
 
     fig1 = px.line(df_accuracy, x="limit", y="score")
     fig2 = px.imshow(df_cosine, text_auto=True, aspect="auto")
