@@ -3,6 +3,7 @@ from dash import Dash, Input, Output, State, dcc, html
 
 import dashboard1
 import dashboard2
+import dashboard3
 
 
 app = Dash(external_stylesheets=[dbc.themes.FLATLY], suppress_callback_exceptions=True)
@@ -59,6 +60,8 @@ def render_page_content(pathname):
         return dashboard1.serve_layout()
     elif pathname == "/dashboard2":
         return dashboard2.serve_layout()
+    elif pathname == "/dashboard3":
+        return dashboard3.serve_layout()
 
     # If the user tries to reach a different page, return a 404 message
     return html.Div(
