@@ -6,6 +6,7 @@ import re
 
 from dash import Input, Output, html, callback, callback_context, dcc
 from generate_graphs import find_clusters, generate_main_graph, generate_cluster_graph
+from dash_matrice import nb_pred, plot_confusion_matrix
 from PIL import Image
 
 vectors = np.load('../vectors/vectors_google_1.npy')
@@ -49,14 +50,15 @@ def serve_layout():
         ),
     ])
 
-    Card_2 = dbc.Card([
-        dbc.CardHeader("Card_2", id="card-2", style={"text-align": "center"}),
+    Tab_1 = dbc.Tab([
+        #dbc.CardHeader("Card_2", id="card-2", style={"text-align": "center"}),
+        html.Br(),
         dbc.Row(cluster_limit),
         html.Div([
             cyto.Cytoscape(
                 id='clusters_graph',
                 layout={'name': 'circle'},
-                style={'width': '100%', 'height': '250px'},
+                style={'width': '100%', 'height': '465px'},
                 elements=generate_cluster_graph(clusters, "Humain", 0.2)
             )
         ]),
@@ -69,12 +71,12 @@ def serve_layout():
                 for name in ['grid', 'random', 'circle', 'cose', 'concentric']
             ]
         ),
-    ])
+    ], id="tab1")
 
-    Card_3 = dbc.Card([
-        dbc.CardHeader("Confusion Matrix", id="card-3", style={"text-align": "center"}),
-        #heatmap
-    ])
+    #Card_3 = dbc.Card([
+    #    #dbc.CardHeader(id="card-3", style={"text-align": "center"}),
+    #    dcc.Graph(id="confusion-matrix", style={'height': '200px', 'width': '100%'})
+    #])
 
     modal = html.Div(
         [
@@ -89,6 +91,15 @@ def serve_layout():
         ]
     )
 
+    tabs = dbc.Card([
+        dbc.CardHeader(
+            dbc.Tabs([
+                Tab_1,
+                dbc.Tab(dcc.Graph(id="confusion-matrix", style={'height': '560px'}), id="tab2")
+            ])   
+        )
+    ])
+
     layout = html.Div([
         dbc.Row(model_choice),
         html.Br(),
@@ -102,12 +113,11 @@ def serve_layout():
                 ),
                 dbc.Col(
                     [
-                        dbc.Row(Card_2),
-                        dbc.Row(Card_3),
+                        tabs
                     ]
                 ),
             ],
-            justify="center"
+            justify="center",
         ),
     ])
 
@@ -115,8 +125,8 @@ def serve_layout():
 
 
 @callback(Output('clusters_graph', 'elements'),
-          Output('card-2', 'children'),
-          Output('card-3', 'children'),
+          Output('tab1', 'label'),
+          Output('tab2', 'label'),
           Input('main_graph', 'tapNode'),
           Input('model-choice-1', 'value'),
           Input('cluster-limit-slider', 'value'))
@@ -181,3 +191,19 @@ def update_model_dash1(value, limit):
     return generate_main_graph(clusters)
 
 
+@callback(Output('confusion-matrix','figure'),
+          Input('main_graph', 'tapNode'),
+          Input('model-choice-1', 'value'),
+          Input('cluster-limit-slider', 'value')
+          )
+def update_confusion_matrix(node, model, limit):
+    colors = ['reds', 'blues', 'greens', 'oranges', 'magenta']
+    vectors = np.load(model)
+    names = list(map(lambda image_name: image_name[6:-4], sorted(glob.glob('../img/*'))))
+    clusters = find_clusters(vectors, names, 'cosine', limit)
+    if node is not None:
+        cluster_type = re.search(r'[a-zA-Z]+', str(node['data']['id'])).group()
+    else:
+        cluster_type = "Humain"
+    index = list(clusters.keys()).index(cluster_type)
+    return nb_pred(clusters, names, cluster_type, colors[index])
