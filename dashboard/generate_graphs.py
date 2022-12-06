@@ -1,11 +1,12 @@
+import glob
 import re
+import numpy as np
 import tensorflow as tf
 import tensorflow_hub as hub
+import sys
+sys.path.append('../')
 
 from scipy.spatial import distance
-
-model_google_1 = tf.keras.Sequential([hub.KerasLayer("https://tfhub.dev/google/imagenet/inception_v3/feature_vector/5",
-                                                     trainable=False, arguments=dict(batch_norm_momentum=0.997))])
 
 
 def find_clusters(vectors, names, metric, limit):
@@ -84,5 +85,32 @@ def generate_cluster_graph(cluster, cluster_type, limit):
                                 cyto_edges.append({'data': {'source': k, 'target': k2},
                                                    'classes': 'edge',
                                                    'style': {'line-color': colors[indice_key]}})
+
+    return cyto_nodes + cyto_edges
+
+
+def find_near_imgs(vector, limit, metric, model):
+    imgs = []
+    names = list(map(lambda image_name: image_name[6:-4], sorted(glob.glob('../img/*'))))
+    vectors = np.load(model)
+    for index, v in enumerate(vectors):
+        d = distance.cdist([vector], [v], metric)[0]
+        if limit > d[0] > 0.0001:
+            imgs.append({names[index]:v})
+    return imgs
+
+
+def generate_upload_graph(uploaded_img, imgs):
+    cyto_nodes = []
+    cyto_edges = []
+    cyto_nodes.append({'data': {'id': uploaded_img, 'label': uploaded_img},
+                                'classes': 'uploaded_img_node'})
+    colors = ['red', 'blue', 'green', 'orange', 'violet']
+    for i in imgs:
+        for key, value in i.items():
+            cyto_nodes.append({'data': {'id': key, 'label': key},
+                                'classes': 'img_node'})
+            cyto_edges.append({'data': {'source': uploaded_img, 'target': key},
+                                'classes': 'edge'})
 
     return cyto_nodes + cyto_edges
