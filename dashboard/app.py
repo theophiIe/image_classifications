@@ -7,7 +7,7 @@ import dashboard3
 
 
 app = Dash(external_stylesheets=[dbc.themes.FLATLY], suppress_callback_exceptions=True)
-app.title = "Dashboards template"
+app.title = "Images_classification"
 
 nav_contents = dbc.Nav(
     [
@@ -28,7 +28,7 @@ app.layout = html.Div(
                         # Use row and col to control vertical alignment of logo / brand
                         dbc.Row(
                             [
-                                dbc.Col(dbc.NavbarBrand("Dashboard", className="ms-2")),
+                                dbc.Col(dbc.NavbarBrand("Images classification", className="ms-2")),
                                 dbc.Col(dbc.Nav(nav_contents, className="ms-2"), )
                             ],
                             align="center",

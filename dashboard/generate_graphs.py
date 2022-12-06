@@ -37,12 +37,12 @@ def generate_main_graph(cluster):
         cyto_nodes.append({'data': {'id': key, 'label': key.capitalize()},
                            'classes': 'cluster_node',
                            'style': {'background-color': colors[indice_key], 'width': 100, 'height': 90,
-                                     'font-size': 150},
+                                     'font-size': 80},
                            'selectable': True
                            })
         for d in values:
             for k, v in d.items():
-                cyto_nodes.append({'data': {'id': k, 'label': k},
+                cyto_nodes.append({'data': {'id': k},
                                    'classes': 'img_node',
                                    'style': {'background-color': colors[indice_key], 'font-size': 50},
                                    'selectable': True})
