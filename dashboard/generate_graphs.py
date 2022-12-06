@@ -20,12 +20,13 @@ def find_clusters(vectors, names, metric, limit):
         for index2, v2 in enumerate(vectors):
             d = distance.cdist([v1], [v2], metric)[0]
             if limit > d[0] > 0.0001:
-                if names[index2] not in clusters[cluster_type]:
+                if names[index2] not in clustered_items:
                     clusters[cluster_type].append({names[index2]: v2})
                     clustered_items.append(names[index2])
     for index, v in enumerate(vectors):
         if (names[index] not in clustered_items) and (names[index] not in clusters["NoCluster"]):
             clusters["NoCluster"].append({names[index]: v})
+    print(clusters)
     return clusters
 
 
