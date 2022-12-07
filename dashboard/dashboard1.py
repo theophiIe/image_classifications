@@ -51,7 +51,6 @@ def serve_layout():
     ])
 
     Tab_1 = dbc.Tab([
-        #dbc.CardHeader("Card_2", id="card-2", style={"text-align": "center"}),
         html.Br(),
         dbc.Row(cluster_limit),
         html.Div([
@@ -72,11 +71,6 @@ def serve_layout():
             ]
         ),
     ], id="tab1")
-
-    #Card_3 = dbc.Card([
-    #    #dbc.CardHeader(id="card-3", style={"text-align": "center"}),
-    #    dcc.Graph(id="confusion-matrix", style={'height': '200px', 'width': '100%'})
-    #])
 
     modal = html.Div(
         [

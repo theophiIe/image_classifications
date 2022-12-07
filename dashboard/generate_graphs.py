@@ -24,35 +24,36 @@ def find_clusters(vectors, names, metric, limit):
                     clusters[cluster_type].append({names[index2]: v2})
                     clustered_items.append(names[index2])
     for index, v in enumerate(vectors):
-        if (names[index] not in clustered_items) and (names[index] not in clusters["NoCluster"]):
+        if names[index] not in clustered_items:
             clusters["NoCluster"].append({names[index]: v})
-    print(clusters)
     return clusters
 
 
 def generate_main_graph(cluster):
     cyto_nodes = []
-    colors = ['red', 'blue', 'green', 'orange', 'violet']
+    cyto_edges = []
+    colors = {'nocluster' : 'red',
+              'animal' : 'blue',
+              'humain' : 'green',
+              'voiture' : 'orange',
+              'doc' : 'violet'}
     for key, values in cluster.items():
-        indice_key = list(cluster.keys()).index(key)
+        indice_key = re.search(r'[a-zA-Z]+', str(key).lower()).group()
+        print(indice_key)
         cyto_nodes.append({'data': {'id': key, 'label': key.capitalize()},
                            'classes': 'cluster_node',
                            'style': {'background-color': colors[indice_key], 'width': 100, 'height': 90,
                                      'font-size': 80},
                            'selectable': True
                            })
+        
         for d in values:
             for k, v in d.items():
+                indice_key = re.search(r'[a-zA-Z]+', str(k).lower()).group()
                 cyto_nodes.append({'data': {'id': k},
                                    'classes': 'img_node',
                                    'style': {'background-color': colors[indice_key], 'font-size': 50},
                                    'selectable': True})
-
-    cyto_edges = []
-    for key, values in cluster.items():
-        indice_key = list(cluster.keys()).index(key)
-        for d in values:
-            for k, v in d.items():
                 cyto_edges.append({'data': {'source': key, 'target': k},
                                    'classes': 'edge',
                                    'style': {'line-color': colors[indice_key]}})
@@ -63,11 +64,16 @@ def generate_main_graph(cluster):
 def generate_cluster_graph(cluster, cluster_type, limit):
     cyto_nodes = []
     colors = ['red', 'blue', 'green', 'orange', 'violet']
+    colors = {'nocluster' : 'red',
+            'animal' : 'blue',
+            'humain' : 'green',
+            'voiture' : 'orange',
+            'doc' : 'violet'}
     for key, values in cluster.items():
         if key == cluster_type:
-            indice_key = list(cluster.keys()).index(key)
             for d0 in values:
                 for k0, v0 in d0.items():
+                    indice_key = re.search(r'[a-zA-Z]+', str(k0).lower()).group()
                     cyto_nodes.append({'data': {'id': k0, 'label': k0},
                                        'classes': 'img_node',
                                        'style': {'background-color': colors[indice_key]
@@ -76,7 +82,7 @@ def generate_cluster_graph(cluster, cluster_type, limit):
     cyto_edges = []
     for key, values in cluster.items():
         if key == cluster_type:
-            indice_key = list(cluster.keys()).index(key)
+            indice_key = re.search(r'[a-zA-Z]+', str(key).lower()).group()
             for d in values:
                 for k, v in d.items():
                     for d2 in values:
@@ -105,7 +111,8 @@ def generate_upload_graph(uploaded_img, imgs):
     cyto_nodes = []
     cyto_edges = []
     cyto_nodes.append({'data': {'id': uploaded_img, 'label': uploaded_img},
-                                'classes': 'uploaded_img_node'})
+                                'classes': 'uploaded_img_node', 
+                                'style': {'background-color': 'red'}})
     colors = ['red', 'blue', 'green', 'orange', 'violet']
     for i in imgs:
         for key, value in i.items():
