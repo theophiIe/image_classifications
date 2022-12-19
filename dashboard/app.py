@@ -4,7 +4,7 @@ from dash import Dash, Input, Output, State, dcc, html
 import dashboard1
 import dashboard2
 import dashboard3
-
+import dashboard4
 
 app = Dash(external_stylesheets=[dbc.themes.FLATLY], suppress_callback_exceptions=True)
 app.title = "Images_classification"
@@ -14,6 +14,7 @@ nav_contents = dbc.Nav(
         dbc.NavItem(dbc.NavLink("Dashboard 1", href="/dashboard1", active="exact")),
         dbc.NavItem(dbc.NavLink("DashBoard 2", href="/dashboard2", active="exact")),
         dbc.NavItem(dbc.NavLink("DashBoard 3", href="/dashboard3", active="exact")),
+        dbc.NavItem(dbc.NavLink("DashBoard 4", href="/dashboard4", active="exact")),
     ],
     className="ms-auto",
     navbar=True
@@ -62,6 +63,8 @@ def render_page_content(pathname):
         return dashboard2.serve_layout()
     elif pathname == "/dashboard3":
         return dashboard3.serve_layout()
+    elif pathname == "/dashboard4":
+        return dashboard4.serve_layout()
 
     # If the user tries to reach a different page, return a 404 message
     return html.Div(
