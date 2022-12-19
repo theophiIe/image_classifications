@@ -1,20 +1,13 @@
 import glob
 import re
-import matplotlib.pyplot as plt
-import plotly.graph_objects as go
 import numpy as np
-import seaborn as sns
-import pandas as pd
-from dash import Dash, dcc, html, Input, Output
 import plotly.express as px
-from scipy.spatial import distance
-import statistics
-import plotly.figure_factory as ff
+
 
 def nb_pred(cluster, names, categorie, color):
     TP, TN, FN, FP = 0, 0, 0, 0
     for key, value in cluster.items():
-        if(key == categorie):
+        if key == categorie:
             for d in value:
                 for v in d.keys():
                     if re.search(r'[a-zA-Z]+', v).group() == categorie:
@@ -30,16 +23,15 @@ def nb_pred(cluster, names, categorie, color):
             cf_matrix = cf_matrix.reshape(2, 2)
     return plot_confusion_matrix(cf_matrix, categorie, color)
 
+
 def plot_confusion_matrix(cf_matrix, categorie, color):
     categories = [categorie, f'Non {categorie}']
     matrix = (cf_matrix / np.sum(cf_matrix))
     fig = px.imshow(matrix, x=categories, y=categories, text_auto=".2%", color_continuous_scale=color, aspect="auto")
     fig.update_layout(title_text='<b>Confusion matrix</b>',
-                  xaxis =  {"title": "Prédiction"}, 
-                  yaxis = {"title": "Valeur actuelle"},
-                  autosize = False,
-                  width = 650, height = 550
-                 )
+                      xaxis={"title": "Prédiction"},
+                      yaxis={"title": "Valeur actuelle"},
+                      autosize=False,
+                      width=650, height=550
+                      )
     return fig
-    
-

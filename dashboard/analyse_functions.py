@@ -79,7 +79,7 @@ def generate_data_frame(extract_images, metric, name_images):
         res = []
         for image_2 in extract_images:
             dc = distance.cdist([image_1], [image_2], metric)[0]
-            res.append(round(dc[0],3))
+            res.append(round(dc[0], 3))
 
         dict_res[name_images[index]] = res
 
