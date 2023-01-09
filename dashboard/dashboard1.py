@@ -6,7 +6,7 @@ import re
 
 from dash import Input, Output, html, callback, callback_context, dcc
 from generate_graphs import find_clusters, generate_main_graph, generate_cluster_graph
-from dash_matrice import nb_pred, plot_confusion_matrix
+from dash_matrice import nb_pred
 from PIL import Image
 
 vectors = np.load('../vectors/vectors_google_1.npy')
@@ -16,17 +16,17 @@ clusters = find_clusters(vectors, names, 'cosine', 0.3)
 
 def serve_layout():
     limit = dcc.Slider(0, 0.7, 0.05,
-               value=0.3,
-               id='limit-slider'
-    )
+                       value=0.3,
+                       id='limit-slider'
+                       )
     models = sorted(glob.glob("../vectors/*.npy"))
     model_choice = dcc.Dropdown([m for m in models], "../vectors/vectors_google_1.npy",
                                 id='model-choice-1',
                                 style={'font-size': 15, 'width': '100%'})
     cluster_limit = dcc.Slider(0, 0.4, 0.05,
-               value=0.2,
-               id='cluster-limit-slider'
-    )
+                               value=0.2,
+                               id='cluster-limit-slider'
+                               )
 
     Card_1 = dbc.Card([
         dbc.CardHeader("Main graph", style={"text-align": "center"}),
@@ -108,7 +108,7 @@ def serve_layout():
             dbc.Tabs([
                 Tab_1,
                 dbc.Tab(dcc.Graph(id="confusion-matrix", style={'height': '560px'}), id="tab2")
-            ])   
+            ])
         )
     ])
 
@@ -148,8 +148,9 @@ def update_cluster(node, value, limit):
     clusters = find_clusters(vectors, names, 'cosine', limit)
     if node is not None:
         cluster_type = re.search(r'[a-zA-Z]+', str(node['data']['id'])).group()
-        return generate_cluster_graph(clusters, cluster_type, limit), cluster_type, f"Confusion matrix for {cluster_type}"
-    
+        return generate_cluster_graph(clusters, cluster_type,
+                                      limit), cluster_type, f"Confusion matrix for {cluster_type}"
+
     return generate_cluster_graph(clusters, "Humain", limit), "Humain", "Confusion matrix for Humain"
 
 
@@ -193,9 +194,10 @@ def toggle_modal(node1, node2):
             return False, " "
     return False, " "
 
+
 @callback(Output('main_graph', 'elements'),
           Input('model-choice-1', 'value'),
-          Input('limit-slider','value'))
+          Input('limit-slider', 'value'))
 def update_model_dash1(value, limit):
     vectors = np.load(value)
     names = list(map(lambda image_name: image_name[6:-4], sorted(glob.glob('../img/*'))))
@@ -203,7 +205,7 @@ def update_model_dash1(value, limit):
     return generate_main_graph(clusters)
 
 
-@callback(Output('confusion-matrix','figure'),
+@callback(Output('confusion-matrix', 'figure'),
           Input('main_graph', 'tapNode'),
           Input('model-choice-1', 'value'),
           Input('cluster-limit-slider', 'value')

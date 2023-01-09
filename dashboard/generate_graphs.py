@@ -1,12 +1,11 @@
 import glob
 import re
 import numpy as np
-import tensorflow as tf
-import tensorflow_hub as hub
 import sys
-sys.path.append('../')
 
 from scipy.spatial import distance
+
+sys.path.append('../')
 
 
 def find_clusters(vectors, names, metric, limit):
@@ -32,21 +31,20 @@ def find_clusters(vectors, names, metric, limit):
 def generate_main_graph(cluster):
     cyto_nodes = []
     cyto_edges = []
-    colors = {'nocluster' : 'red',
-              'animal' : 'blue',
-              'humain' : 'green',
-              'voiture' : 'orange',
-              'doc' : 'violet'}
+    colors = {'nocluster': 'red',
+              'animal': 'blue',
+              'humain': 'green',
+              'voiture': 'orange',
+              'doc': 'violet'}
     for key, values in cluster.items():
         indice_key = re.search(r'[a-zA-Z]+', str(key).lower()).group()
-        print(indice_key)
         cyto_nodes.append({'data': {'id': key, 'label': key.capitalize()},
                            'classes': 'cluster_node',
                            'style': {'background-color': colors[indice_key], 'width': 100, 'height': 90,
                                      'font-size': 80},
                            'selectable': True
                            })
-        
+
         for d in values:
             for k, v in d.items():
                 indice_key = re.search(r'[a-zA-Z]+', str(k).lower()).group()
@@ -64,11 +62,11 @@ def generate_main_graph(cluster):
 def generate_cluster_graph(cluster, cluster_type, limit):
     cyto_nodes = []
     colors = ['red', 'blue', 'green', 'orange', 'violet']
-    colors = {'nocluster' : 'red',
-            'animal' : 'blue',
-            'humain' : 'green',
-            'voiture' : 'orange',
-            'doc' : 'violet'}
+    colors = {'nocluster': 'red',
+              'animal': 'blue',
+              'humain': 'green',
+              'voiture': 'orange',
+              'doc': 'violet'}
     for key, values in cluster.items():
         if key == cluster_type:
             for d0 in values:
@@ -103,7 +101,7 @@ def find_near_imgs(vector, limit, metric, model):
     for index, v in enumerate(vectors):
         d = distance.cdist([vector], [v], metric)[0]
         if limit > d[0] > 0.0001:
-            imgs.append({names[index]:v})
+            imgs.append({names[index]: v})
     return imgs
 
 
@@ -111,14 +109,14 @@ def generate_upload_graph(uploaded_img, imgs):
     cyto_nodes = []
     cyto_edges = []
     cyto_nodes.append({'data': {'id': uploaded_img, 'label': uploaded_img},
-                                'classes': 'uploaded_img_node', 
-                                'style': {'background-color': 'red'}})
+                       'classes': 'uploaded_img_node',
+                       'style': {'background-color': 'red'}})
     colors = ['red', 'blue', 'green', 'orange', 'violet']
     for i in imgs:
         for key, value in i.items():
             cyto_nodes.append({'data': {'id': key, 'label': key},
-                                'classes': 'img_node'})
+                               'classes': 'img_node'})
             cyto_edges.append({'data': {'source': uploaded_img, 'target': key},
-                                'classes': 'edge'})
+                               'classes': 'edge'})
 
     return cyto_nodes + cyto_edges

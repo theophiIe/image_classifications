@@ -1,4 +1,3 @@
-import collections
 import dash_bootstrap_components as dbc
 import glob
 import pandas as pd
@@ -17,14 +16,13 @@ def serve_layout():
 
     models = sorted(glob.glob("../vectors/*.npy"))
     models_choice = dcc.Dropdown([m for m in models], "../vectors/vectors_google_1.npy",
-                                id='models-choice',
-                                multi=True,
-                                style={'font-size': 15, 'width': '100%'})
+                                 id='models-choice',
+                                 multi=True,
+                                 style={'font-size': 15, 'width': '100%'})
 
     model_choice = dcc.Dropdown([m for m in models], "../vectors/vectors_google_1.npy",
                                 id='model-choice',
                                 style={'font-size': 15, 'width': '100%'})
-            
 
     Card_1 = dbc.Card([
         dbc.CardHeader("Card_1", style={"text-align": "center"}),
@@ -39,7 +37,6 @@ def serve_layout():
         dcc.Graph(id="matrix", figure=fig2),
         html.Br()
     ])
-
 
     layout = html.Div([
         html.Br(),
@@ -79,9 +76,10 @@ def update_model(value):
 
     fig = px.line(dfs[0], x="limit", y="score")
     for i in range(len(dfs)):
-        fig.add_scatter(x = dfs[i].limit, y = dfs[i].score, line_color = colors[i], name = index[i])
+        fig.add_scatter(x=dfs[i].limit, y=dfs[i].score, line_color=colors[i], name=index[i])
 
     return fig
+
 
 @callback(Output('matrix', 'figure'),
           Input('model-choice', 'value'))
