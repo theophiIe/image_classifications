@@ -50,6 +50,24 @@ def serve_layout():
         ),
     ])
 
+    about_window = html.Div([
+        dbc.Button("?", id="about_button", n_clicks=0),
+        dbc.Modal(
+            [
+                dbc.ModalHeader(dbc.ModalTitle("About")),
+                dbc.ModalBody("This is the content of the modal"),
+                dbc.ModalFooter(
+                    dbc.Button(
+                        "Close", id="close", className="ms-auto", n_clicks=0
+                    )
+                ),
+            ],
+            id="modal",
+            is_open=False,
+            ),
+        ]
+    )
+
     Tab_1 = dbc.Tab([
         html.Br(),
         dbc.Row(cluster_limit),
