@@ -23,21 +23,21 @@ from vectorize_img import extract
 #model_google_3 = tf.saved_model.load('../saved_models/model_google_3')
 #model_tensorflow_1 = tf.saved_model.load('../saved_models/model_tensorflow_1')
 
-#model_google_1 = tf.keras.Sequential(
-#[hub.KerasLayer("https://tfhub.dev/google/imagenet/inception_v3/feature_vector/5",
-#                trainable=False, arguments=dict(batch_norm_momentum=0.997))])
-#
-#model_google_2 = tf.keras.Sequential([hub.KerasLayer(
-#    "https://tfhub.dev/google/imagenet/efficientnet_v2_imagenet1k_b0/feature_vector/2", trainable=False)])
-#
-#model_google_3 = tf.keras.Sequential([hub.KerasLayer(
-#    "https://tfhub.dev/google/imagenet/mobilenet_v3_large_075_224/feature_vector/5", trainable=False,
-#    arguments=dict(batch_norm_momentum=0.997))])
-#
-#model_tensorflow_1 = tf.keras.Sequential(
-#    [hub.KerasLayer("https://tfhub.dev/tensorflow/efficientnet/lite0/feature-vector/2",
-#                    input_shape=(224, 224) + (3,))])
-#
+model_google_1 = tf.keras.Sequential(
+[hub.KerasLayer("https://tfhub.dev/google/imagenet/inception_v3/feature_vector/5",
+                trainable=False, arguments=dict(batch_norm_momentum=0.997))])
+
+model_google_2 = tf.keras.Sequential([hub.KerasLayer(
+    "https://tfhub.dev/google/imagenet/efficientnet_v2_imagenet1k_b0/feature_vector/2", trainable=False)])
+
+model_google_3 = tf.keras.Sequential([hub.KerasLayer(
+    "https://tfhub.dev/google/imagenet/mobilenet_v3_large_075_224/feature_vector/5", trainable=False,
+    arguments=dict(batch_norm_momentum=0.997))])
+
+model_tensorflow_1 = tf.keras.Sequential(
+    [hub.KerasLayer("https://tfhub.dev/tensorflow/efficientnet/lite0/feature-vector/2",
+                    input_shape=(224, 224) + (3,))])
+
 
 vectors = np.load('../vectors/vectors_google_1.npy')
 names = list(map(lambda image_name: image_name[6:-4], sorted(glob.glob('../img/*'))))
@@ -135,21 +135,21 @@ def serve_layout():
           Input('limit-slider', 'value'))
 def update_output(file, model, limit):
     if file is not None:
-        model_google_1 = tf.keras.Sequential(
-            [hub.KerasLayer("https://tfhub.dev/google/imagenet/inception_v3/feature_vector/5",
-                        trainable=False, arguments=dict(batch_norm_momentum=0.997))])
-
-        model_google_2 = tf.keras.Sequential([hub.KerasLayer(
-            "https://tfhub.dev/google/imagenet/efficientnet_v2_imagenet1k_b0/feature_vector/2", trainable=False)])
-
-        model_google_3 = tf.keras.Sequential([hub.KerasLayer(
-            "https://tfhub.dev/google/imagenet/mobilenet_v3_large_075_224/feature_vector/5", trainable=False,
-            arguments=dict(batch_norm_momentum=0.997))])
-
-        model_tensorflow_1 = tf.keras.Sequential(
-            [hub.KerasLayer("https://tfhub.dev/tensorflow/efficientnet/lite0/feature-vector/2",
-                            input_shape=(224, 224) + (3,))])
-
+        #model_google_1 = tf.keras.Sequential(
+        #    [hub.KerasLayer("https://tfhub.dev/google/imagenet/inception_v3/feature_vector/5",
+        #                trainable=False, arguments=dict(batch_norm_momentum=0.997))])
+#
+        #model_google_2 = tf.keras.Sequential([hub.KerasLayer(
+        #    "https://tfhub.dev/google/imagenet/efficientnet_v2_imagenet1k_b0/feature_vector/2", trainable=False)])
+#
+        #model_google_3 = tf.keras.Sequential([hub.KerasLayer(
+        #    "https://tfhub.dev/google/imagenet/mobilenet_v3_large_075_224/feature_vector/5", trainable=False,
+        #    arguments=dict(batch_norm_momentum=0.997))])
+#
+        #model_tensorflow_1 = tf.keras.Sequential(
+        #    [hub.KerasLayer("https://tfhub.dev/tensorflow/efficientnet/lite0/feature-vector/2",
+        #                    input_shape=(224, 224) + (3,))])
+#
         models = {'../vectors/vectors_google_1.npy' : [model_google_1,(299, 299)],
                   '../vectors/vectors_google_2.npy' : [model_google_2,(224, 224)],
                   '../vectors/vectors_google_3.npy' : [model_google_3,(224, 224)],
