@@ -3,8 +3,9 @@ import dash_cytoscape as cyto
 import glob
 import numpy as np
 import re
+import pandas as pd
 
-from dash import Input, Output, html, callback, callback_context, dcc
+from dash import Input, Output, html, callback, callback_context, dcc, State
 from generate_graphs import find_clusters, generate_main_graph, generate_cluster_graph
 from dash_matrice import nb_pred
 from PIL import Image
@@ -12,7 +13,7 @@ from PIL import Image
 vectors = np.load('../vectors/vectors_google_1.npy')
 names = list(map(lambda image_name: image_name[6:-4], sorted(glob.glob('../img/*'))))
 clusters = find_clusters(vectors, names, 'cosine', 0.3)
-
+data = pd.read_json("../info_models.json")
 
 def serve_layout():
     limit = dcc.Slider(0, 0.7, 0.05,
@@ -51,18 +52,36 @@ def serve_layout():
     ])
 
     about_window = html.Div([
-        dbc.Button("?", id="about_button", n_clicks=0),
-        dbc.Modal(
-            [
+        dbc.Button("?", id="open-about", n_clicks=0),
+        dbc.Modal([
                 dbc.ModalHeader(dbc.ModalTitle("About")),
-                dbc.ModalBody("This is the content of the modal"),
+                dbc.Card([
+                    dbc.CardHeader(id="about-title", style={"text-align": "center"}),
+                    dbc.CardBody(
+                        [
+                            html.H5(id="about-name", className="card-title"),
+                            html.P(id="about-description"),
+                            html.P(id="about-publisher"),
+                            html.P(id="about-imgsize"),
+                            html.P(id="about-vectorsize"),
+                            dbc.ButtonGroup(
+                                [
+                                    dbc.Button(id="link", outline=True, color="primary", target="_blank"),
+                                    dbc.Button(id="Architecture", outline=True, color="primary",
+                                            target="_blank"),
+                                    dbc.Button(id="Dataset", outline=True, color="primary", target="_blank"),
+                                ]
+                            ),
+                        ]
+                    )
+                ]),
                 dbc.ModalFooter(
                     dbc.Button(
-                        "Close", id="close", className="ms-auto", n_clicks=0
+                        "Close", id="close-about", className="ms-auto", n_clicks=0
                     )
                 ),
             ],
-            id="modal",
+            id="modal-about",
             is_open=False,
             ),
         ]
@@ -113,7 +132,7 @@ def serve_layout():
     ])
 
     layout = html.Div([
-        dbc.Row(model_choice),
+        dbc.Row([model_choice, about_window]),
         html.Br(),
         dbc.Row(
             [
@@ -221,3 +240,30 @@ def update_confusion_matrix(node, model, limit):
         cluster_type = "Humain"
     index = list(clusters.keys()).index(cluster_type)
     return nb_pred(clusters, names, cluster_type, colors[index])
+
+
+@callback(
+    Output("modal-about", "is_open"),
+    [Input("open-about", "n_clicks"), Input("close-about", "n_clicks")],
+    [State("modal-about", "is_open")],
+)
+def toggle_modal(n1, n2, is_open):
+    if n1 or n2:
+        return not is_open
+    return is_open
+
+@callback(Output("about-title", "children"),
+          Output("about-name", "children"),
+          Output("about-description", "children"),
+          Output("about-publisher", "children"),
+          Output("about-imgsize", "children"),
+          Output("about-vectorsize", "children"),
+          Output("link", "href"),
+          Output("link", "children"),
+          Output("Architecture", "href"),
+          Output("Architecture", "children"),
+          Output("Dataset", "href"),
+          Output("Dataset", "children"),
+          Input("model-choice-1", "value"))
+def update_about(model):
+    return data[model]["name"], "Name : " + data[model]["name"], "Description : " + data[model]["description"], "Publisher : " + data[model]["publisher"], "Image size : " + data[model]["image_size"], "Vector size : " + data[model]["vector_size"], data[model]["link"], "link", data[model]["architecture"], "architechture" , data[model]["dataset"], "dataset"
