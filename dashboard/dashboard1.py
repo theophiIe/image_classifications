@@ -23,7 +23,7 @@ def serve_layout():
     models = sorted(glob.glob("../vectors/*.npy"))
     model_choice = dcc.Dropdown([m for m in models], "../vectors/vectors_google_1.npy",
                                 id='model-choice-1',
-                                style={'font-size': 15, 'width': '100%'})
+                                style={'font-size': 15, 'width': '50%'})
     cluster_limit = dcc.Slider(0, 0.4, 0.05,
                                value=0.2,
                                id='cluster-limit-slider'
@@ -51,7 +51,7 @@ def serve_layout():
         ),
     ])
 
-    about_window = html.Div([
+    about_window = dbc.Col([
         dbc.Button("?", id="open-about", n_clicks=0),
         dbc.Modal([
                 dbc.ModalHeader(dbc.ModalTitle("About")),
@@ -84,7 +84,8 @@ def serve_layout():
             id="modal-about",
             is_open=False,
             ),
-        ]
+        ],
+        width = 1
     )
 
     Tab_1 = dbc.Tab([
@@ -132,7 +133,7 @@ def serve_layout():
     ])
 
     layout = html.Div([
-        dbc.Row([model_choice, about_window]),
+        dbc.Row([model_choice, dbc.Col(id="sizes", width = 5), about_window]),
         html.Br(),
         dbc.Row(
             [
@@ -158,6 +159,7 @@ def serve_layout():
 @callback(Output('clusters_graph', 'elements'),
           Output('tab1', 'label'),
           Output('tab2', 'label'),
+          Output("sizes", "children"),
           Input('main_graph', 'tapNode'),
           Input('model-choice-1', 'value'),
           Input('cluster-limit-slider', 'value'))
@@ -168,9 +170,9 @@ def update_cluster(node, value, limit):
     if node is not None:
         cluster_type = re.search(r'[a-zA-Z]+', str(node['data']['id'])).group()
         return generate_cluster_graph(clusters, cluster_type,
-                                      limit), cluster_type, f"Confusion matrix for {cluster_type}"
+                                      limit), cluster_type, f"Confusion matrix for {cluster_type}", dbc.Col([html.P("Image size = " + data[value]["image_size"] + ", Vector size = " + data[value]["vector_size"])])
 
-    return generate_cluster_graph(clusters, "Humain", limit), "Humain", "Confusion matrix for Humain"
+    return generate_cluster_graph(clusters, "Humain", limit), "Humain", "Confusion matrix for Humain", dbc.Col([html.P("Image size = " + data[value]["image_size"] + ", Vector size = " + data[value]["vector_size"])])
 
 
 @callback(Output('main_graph', 'layout'),
