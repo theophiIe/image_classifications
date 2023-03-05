@@ -47,6 +47,15 @@ if __name__ == '__main__':
         [hub.KerasLayer("https://tfhub.dev/tensorflow/efficientnet/lite0/feature-vector/2",
                         input_shape=(224, 224) + (3,))])
 
+    model_google_4 = tf.keras.Sequential([hub.KerasLayer(
+        "https://tfhub.dev/google/imagenet/efficientnet_v2_imagenet21k_xl/feature_vector/2", trainable=False)])
+
+    model_google_5 = tf.keras.Sequential([hub.KerasLayer(
+        "https://tfhub.dev/google/imagenet/efficientnet_v2_imagenet21k_b0/feature_vector/2", trainable=False)])
+
+    model_google_6 = tf.keras.Sequential([hub.KerasLayer(
+        "https://tfhub.dev/google/imagenet/efficientnet_v2_imagenet21k_b1/feature_vector/2", trainable=False)])
+
     images_paths = sorted(glob.glob("./img/*"))
     images_names = list(map(lambda image_name: re.search(r'/([a-zA-Z0-9]+)\.', image_name).group()[1:-1], images_paths))
 
@@ -54,6 +63,9 @@ if __name__ == '__main__':
     extract_images_google_2 = vectorized_images(model_google_2, (224, 224), images_paths)
     extract_images_google_3 = vectorized_images(model_google_3, (224, 224), images_paths)
     extract_tensorflow_1 = vectorized_images(model_tensorflow_1, (224, 224), images_paths)
+    extract_images_google_4 = vectorized_images(model_google_4, (512, 512), images_paths)
+    extract_images_google_5 = vectorized_images(model_google_5, (224, 224), images_paths)
+    extract_images_google_6 = vectorized_images(model_google_6, (240, 240), images_paths)
 
     if not os.path.exists("./vectors"):
         os.mkdir("./vectors")
@@ -67,3 +79,6 @@ if __name__ == '__main__':
     np.save('./vectors/vectors_google_2.npy', extract_images_google_2)
     np.save('./vectors/vectors_google_3.npy', extract_images_google_3)
     np.save('./vectors/vectors_tensorflow_4.npy', extract_tensorflow_1)
+    np.save('./vectors/vectors_google_4.npy', extract_images_google_4)
+    np.save('./vectors/vectors_google_5.npy', extract_images_google_5)
+    np.save('./vectors/vectors_google_6.npy', extract_images_google_6)

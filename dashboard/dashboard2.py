@@ -66,7 +66,7 @@ def serve_layout():
           Output("about", "children"),
           Input('models-choice', 'value'))
 def update_model(value):
-    colors = ['orange', 'magenta', 'green', 'red', 'blue']
+    colors = ['orange', 'magenta', 'green', 'red', 'blue', 'yellow', 'black', "pink", "gray", "brown"]
     if type(value) is list:
         if value != []:
             index = [re.search(r'[0-9]+', v).group() for v in value]
