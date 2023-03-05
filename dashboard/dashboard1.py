@@ -35,14 +35,14 @@ def serve_layout():
         html.Div([
             cyto.Cytoscape(
                 id='main_graph',
-                layout={'name': 'circle'},
+                layout={'name': 'cose'},
                 style={'width': '100%', 'height': '500px'},
                 elements=generate_main_graph(clusters)
             )
         ]),
         dcc.Dropdown(
             id='dropdown-update-layout',
-            value='circle',
+            value='cose',
             clearable=False,
             options=[
                 {'label': name.capitalize(), 'value': name}
@@ -93,14 +93,14 @@ def serve_layout():
         html.Div([
             cyto.Cytoscape(
                 id='clusters_graph',
-                layout={'name': 'circle'},
+                layout={'name': 'cose'},
                 style={'width': '100%', 'height': '465px'},
                 elements=generate_cluster_graph(clusters, "Humain", 0.2)
             )
         ]),
         dcc.Dropdown(
             id='dropdown-update-layout-cluster',
-            value='circle',
+            value='cose',
             clearable=False,
             options=[
                 {'label': name.capitalize(), 'value': name}

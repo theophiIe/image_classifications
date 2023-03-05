@@ -11,9 +11,9 @@ app.title = "Images_classification"
 
 nav_contents = dbc.Nav(
     [
-        dbc.NavItem(dbc.NavLink("Dashboard 1", href="/dashboard1", active="exact")),
-        dbc.NavItem(dbc.NavLink("DashBoard 2", href="/dashboard2", active="exact")),
-        dbc.NavItem(dbc.NavLink("DashBoard 3", href="/dashboard3", active="exact")),
+        dbc.NavItem(dbc.NavLink("Clusters", href="/dashboard1", active="exact")),
+        dbc.NavItem(dbc.NavLink("Évaluation", href="/dashboard2", active="exact")),
+        dbc.NavItem(dbc.NavLink("Recherche", href="/dashboard3", active="exact")),
         dbc.NavItem(dbc.NavLink("DashBoard 4", href="/dashboard4", active="exact")),
     ],
     className="ms-auto",
