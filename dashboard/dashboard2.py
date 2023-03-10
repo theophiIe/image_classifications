@@ -8,6 +8,7 @@ from dash import Input, Output, html, callback, dcc
 
 data = pd.read_json("../info_models.json")
 
+
 def serve_layout():
     df_accuracy = pd.read_csv('../accuracy/accuracy_1.csv', index_col=[0])
     df_cosine = pd.read_csv('../cosine/cosine_1.csv', index_col=[0])
@@ -82,10 +83,16 @@ def update_model(value):
         fig.add_scatter(x=dfs[i].limit, y=dfs[i].score, line_color=colors[i], name=index[i])
 
     if isinstance(value, list):
-        return fig, [dbc.Col([html.P(v.split("_")[-1].split(".")[0]), html.P("Image size = " + data[v]["image_size"]),html.P("Vector size = " + data[v]["vector_size"]), html.Br()]) for v in value]
+        return fig, [dbc.Col(
+            [html.P(v.split("_")[-1].split(".")[0]), html.P("Dataset = " + data[v]["dataset"].split("=")[1]),
+             html.P("Architecture = " + data[v]["architecture"].split("=")[1]),
+             html.P("Image size = " + data[v]["image_size"]), html.P("Vector size = " + data[v]["vector_size"]),
+             html.Br()]) for v in value]
 
-    
-    return fig, dbc.Col([html.P(value.split("_")[-1].split(".")[0]),html.P("Image size = " + data[value]["image_size"]), html.P("Vector size = " + data[value]["vector_size"])])
+    return fig, dbc.Col(
+        [html.P(value.split("_")[-1].split(".")[0]), html.P("Dataset = " + data[value]["dataset"].split("=")[1]),
+         html.P("Architecture = " + data[value]["architecture"].split("=")[1]),
+         html.P("Image size = " + data[value]["image_size"]), html.P("Vector size = " + data[value]["vector_size"])])
 
 
 @callback(Output('matrix', 'figure'),

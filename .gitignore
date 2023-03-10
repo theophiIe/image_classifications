@@ -139,3 +139,11 @@ dmypy.json
 
 # npy file
 *.npy
+
+# images
+*.jpg
+*.jpeg
+
+# modèle
+/saved_models
+*.pb

@@ -15,6 +15,7 @@ names = list(map(lambda image_name: image_name[6:-4], sorted(glob.glob('../img/*
 clusters = find_clusters(vectors, names, 'cosine', 0.3)
 data = pd.read_json("../info_models.json")
 
+
 def serve_layout():
     limit = dcc.Slider(0, 0.7, 0.05,
                        value=0.3,
@@ -24,7 +25,7 @@ def serve_layout():
     model_choice = dcc.Dropdown([m for m in models], "../vectors/vectors_google_1.npy",
                                 id='model-choice-1',
                                 style={'font-size': 15, 'width': '50%'})
-    cluster_limit = dcc.Slider(0, 0.4, 0.05,
+    cluster_limit = dcc.Slider(0, 0.7, 0.05,
                                value=0.2,
                                id='cluster-limit-slider'
                                )
@@ -54,38 +55,38 @@ def serve_layout():
     about_window = dbc.Col([
         dbc.Button("?", id="open-about", n_clicks=0),
         dbc.Modal([
-                dbc.ModalHeader(dbc.ModalTitle("About")),
-                dbc.Card([
-                    dbc.CardHeader(id="about-title", style={"text-align": "center"}),
-                    dbc.CardBody(
-                        [
-                            html.H5(id="about-name", className="card-title"),
-                            html.P(id="about-description"),
-                            html.P(id="about-publisher"),
-                            html.P(id="about-imgsize"),
-                            html.P(id="about-vectorsize"),
-                            dbc.ButtonGroup(
-                                [
-                                    dbc.Button(id="link", outline=True, color="primary", target="_blank"),
-                                    dbc.Button(id="Architecture", outline=True, color="primary",
-                                            target="_blank"),
-                                    dbc.Button(id="Dataset", outline=True, color="primary", target="_blank"),
-                                ]
-                            ),
-                        ]
-                    )
-                ]),
-                dbc.ModalFooter(
-                    dbc.Button(
-                        "Close", id="close-about", className="ms-auto", n_clicks=0
-                    )
-                ),
-            ],
-            id="modal-about",
-            is_open=False,
+            dbc.ModalHeader(dbc.ModalTitle("About")),
+            dbc.Card([
+                dbc.CardHeader(id="about-title", style={"text-align": "center"}),
+                dbc.CardBody(
+                    [
+                        html.H5(id="about-name", className="card-title"),
+                        html.P(id="about-description"),
+                        html.P(id="about-publisher"),
+                        html.P(id="about-imgsize"),
+                        html.P(id="about-vectorsize"),
+                        dbc.ButtonGroup(
+                            [
+                                dbc.Button(id="link", outline=True, color="primary", target="_blank"),
+                                dbc.Button(id="Architecture", outline=True, color="primary",
+                                           target="_blank"),
+                                dbc.Button(id="Dataset", outline=True, color="primary", target="_blank"),
+                            ]
+                        ),
+                    ]
+                )
+            ]),
+            dbc.ModalFooter(
+                dbc.Button(
+                    "Close", id="close-about", className="ms-auto", n_clicks=0
+                )
             ),
         ],
-        width = 1
+            id="modal-about",
+            is_open=False,
+        ),
+    ],
+        width=1
     )
 
     Tab_1 = dbc.Tab([
@@ -133,7 +134,7 @@ def serve_layout():
     ])
 
     layout = html.Div([
-        dbc.Row([model_choice, dbc.Col(id="sizes", width = 5), about_window]),
+        dbc.Row([model_choice, dbc.Col(id="sizes", width=5), about_window]),
         html.Br(),
         dbc.Row(
             [
@@ -170,9 +171,11 @@ def update_cluster(node, value, limit):
     if node is not None:
         cluster_type = re.search(r'[a-zA-Z]+', str(node['data']['id'])).group()
         return generate_cluster_graph(clusters, cluster_type,
-                                      limit), cluster_type, f"Confusion matrix for {cluster_type}", dbc.Col([html.P("Image size = " + data[value]["image_size"] + ", Vector size = " + data[value]["vector_size"])])
+                                      limit), cluster_type, f"Confusion matrix for {cluster_type}", dbc.Col(
+            [html.P("Image size = " + data[value]["image_size"] + ", Vector size = " + data[value]["vector_size"])])
 
-    return generate_cluster_graph(clusters, "Humain", limit), "Humain", "Confusion matrix for Humain", dbc.Col([html.P("Image size = " + data[value]["image_size"] + ", Vector size = " + data[value]["vector_size"])])
+    return generate_cluster_graph(clusters, "Humain", limit), "Humain", "Confusion matrix for Humain", dbc.Col(
+        [html.P("Image size = " + data[value]["image_size"] + ", Vector size = " + data[value]["vector_size"])])
 
 
 @callback(Output('main_graph', 'layout'),
@@ -254,6 +257,7 @@ def toggle_modal(n1, n2, is_open):
         return not is_open
     return is_open
 
+
 @callback(Output("about-title", "children"),
           Output("about-name", "children"),
           Output("about-description", "children"),
@@ -268,4 +272,7 @@ def toggle_modal(n1, n2, is_open):
           Output("Dataset", "children"),
           Input("model-choice-1", "value"))
 def update_about(model):
-    return data[model]["name"], "Name : " + data[model]["name"], "Description : " + data[model]["description"], "Publisher : " + data[model]["publisher"], "Image size : " + data[model]["image_size"], "Vector size : " + data[model]["vector_size"], data[model]["link"], "link", data[model]["architecture"], "architechture" , data[model]["dataset"], "dataset"
+    return data[model]["name"], "Name : " + data[model]["name"], "Description : " + data[model][
+        "description"], "Publisher : " + data[model]["publisher"], "Image size : " + data[model][
+                                    "image_size"], "Vector size : " + data[model]["vector_size"], data[model][
+        "link"], "link", data[model]["architecture"], "architechture", data[model]["dataset"], "dataset"
