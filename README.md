@@ -48,7 +48,6 @@ La version de Python recommandé est la `3.8.10`.
 
   ```
   python3 vectorize_img.py
-  python3 models_save.py
   python3 analyze_functions.py
   ```
 * Démarrer le dashboard
