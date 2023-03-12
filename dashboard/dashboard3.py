@@ -10,7 +10,7 @@ from generate_graphs import find_clusters, find_near_imgs, generate_upload_graph
 from PIL import Image
 from vectorize_img import extract
 
-vectors = np.load('../vectors/vectors_google_1.npy')
+vectors = np.load('../vectors/vectors_model_1.npy')
 names = list(map(lambda image_name: image_name[6:-4], sorted(glob.glob('../img/*'))))
 clusters = find_clusters(vectors, names, 'cosine', 0.3)
 
@@ -48,11 +48,11 @@ def serve_layout():
     ])
 
     models = sorted(glob.glob("../vectors/*.npy"))
-    model_choice = dcc.Dropdown([m for m in models], "../vectors/vectors_google_1.npy",
+    model_choice = dcc.Dropdown([m for m in models], "../vectors/vectors_model_1.npy",
                                 id='model-choice-3',
                                 style={'font-size': 15, 'width': '100%'})
 
-    cluster_limit = dcc.Slider(0.1, 0.7, 0.05,
+    cluster_limit = dcc.Slider(0.1, 1, 0.05,
                                value=0.3,
                                id='limit-slider'
                                )
@@ -121,10 +121,23 @@ def update_output(file, model, limit):
             [hub.KerasLayer("https://tfhub.dev/tensorflow/efficientnet/lite0/feature-vector/2",
                             input_shape=(224, 224) + (3,))])
 
-        models = {'../vectors/vectors_google_1.npy': [model_google_1, (299, 299)],
-                  '../vectors/vectors_google_2.npy': [model_google_2, (224, 224)],
-                  '../vectors/vectors_google_3.npy': [model_google_3, (224, 224)],
-                  '../vectors/vectors_tensorflow_4.npy': [model_tensorflow_1, (224, 224)]}
+        model_google_4 = tf.keras.Sequential([hub.KerasLayer(
+            "https://tfhub.dev/google/imagenet/efficientnet_v2_imagenet21k_xl/feature_vector/2", trainable=False)])
+
+        model_google_5 = tf.keras.Sequential([hub.KerasLayer(
+            "https://tfhub.dev/google/imagenet/efficientnet_v2_imagenet21k_b0/feature_vector/2", trainable=False)])
+
+        model_google_6 = tf.keras.Sequential([hub.KerasLayer(
+            "https://tfhub.dev/google/imagenet/efficientnet_v2_imagenet21k_b1/feature_vector/2", trainable=False)])
+
+        models = {'../vectors/vectors_model_1.npy': [model_google_1, (299, 299)],
+                  '../vectors/vectors_model_2.npy': [model_google_2, (224, 224)],
+                  '../vectors/vectors_model_3.npy': [model_google_3, (224, 224)],
+                  '../vectors/vectors_model_4.npy': [model_tensorflow_1, (224, 224)],
+                  '../vectors/vectors_model_5.npy': [model_google_4, (512, 512)],
+                  '../vectors/vectors_model_6.npy': [model_google_5, (224, 224)],
+                  '../vectors/vectors_model_7.npy': [model_google_6, (240, 240)],
+                  }
 
         path = '../uploads/' + str(file)
         vector = extract(models[str(model)][0], path, models[str(model)][1])

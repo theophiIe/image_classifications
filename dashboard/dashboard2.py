@@ -17,12 +17,12 @@ def serve_layout():
     fig2 = px.imshow(df_cosine, text_auto=True, aspect="auto")
 
     models = sorted(glob.glob("../vectors/*.npy"))
-    models_choice = dcc.Dropdown([m for m in models], "../vectors/vectors_google_1.npy",
+    models_choice = dcc.Dropdown([m for m in models], "../vectors/vectors_model_1.npy",
                                  id='models-choice',
                                  multi=True,
                                  style={'font-size': 15, 'width': '100%'})
 
-    model_choice = dcc.Dropdown([m for m in models], "../vectors/vectors_google_1.npy",
+    model_choice = dcc.Dropdown([m for m in models], "../vectors/vectors_model_1.npy",
                                 id='model-choice',
                                 style={'font-size': 15, 'width': '100%'})
 

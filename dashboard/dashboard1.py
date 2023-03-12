@@ -10,25 +10,22 @@ from generate_graphs import find_clusters, generate_main_graph, generate_cluster
 from dash_matrice import nb_pred
 from PIL import Image
 
-vectors = np.load('../vectors/vectors_google_1.npy')
+vectors = np.load('../vectors/vectors_model_1.npy')
 names = list(map(lambda image_name: image_name[6:-4], sorted(glob.glob('../img/*'))))
 clusters = find_clusters(vectors, names, 'cosine', 0.3)
 data = pd.read_json("../info_models.json")
 
 
 def serve_layout():
-    limit = dcc.Slider(0, 0.7, 0.05,
-                       value=0.3,
-                       id='limit-slider'
-                       )
+    limit = dcc.Slider(0, 1, 0.05, value=0.3, id='limit-slider')
+
     models = sorted(glob.glob("../vectors/*.npy"))
-    model_choice = dcc.Dropdown([m for m in models], "../vectors/vectors_google_1.npy",
+
+    model_choice = dcc.Dropdown([m for m in models], "../vectors/vectors_model_1.npy",
                                 id='model-choice-1',
                                 style={'font-size': 15, 'width': '50%'})
-    cluster_limit = dcc.Slider(0, 0.7, 0.05,
-                               value=0.2,
-                               id='cluster-limit-slider'
-                               )
+
+    cluster_limit = dcc.Slider(0, 1, 0.05, value=0.2, id='cluster-limit-slider')
 
     Card_1 = dbc.Card([
         dbc.CardHeader("Main graph", style={"text-align": "center"}),
@@ -68,8 +65,7 @@ def serve_layout():
                         dbc.ButtonGroup(
                             [
                                 dbc.Button(id="link", outline=True, color="primary", target="_blank"),
-                                dbc.Button(id="Architecture", outline=True, color="primary",
-                                           target="_blank"),
+                                dbc.Button(id="Architecture", outline=True, color="primary", target="_blank"),
                                 dbc.Button(id="Dataset", outline=True, color="primary", target="_blank"),
                             ]
                         ),

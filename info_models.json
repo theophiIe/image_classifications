@@ -1,5 +1,5 @@
 {
-  "../vectors/vectors_google_1.npy":
+  "../vectors/vectors_model_1.npy":
     {
       "link": "https://tfhub.dev/google/imagenet/inception_v3/feature_vector/5",
       "name": "imagenet/inception_v3/feature_vector",
@@ -10,7 +10,7 @@
       "image_size": "299, 299",
       "vector_size": "2048"
     },
-  "../vectors/vectors_google_2.npy":
+  "../vectors/vectors_model_2.npy":
     {
       "link": "https://tfhub.dev/google/imagenet/efficientnet_v2_imagenet1k_b0/feature_vector/2",
       "name": "imagenet/efficientnet_v2_imagenet1k_b0/feature_vector",
@@ -21,7 +21,7 @@
       "image_size": "224, 224",
       "vector_size": "1280"
     },
-  "../vectors/vectors_google_3.npy":
+  "../vectors/vectors_model_3.npy":
     {
       "link": "https://tfhub.dev/google/imagenet/mobilenet_v3_large_075_224/feature_vector/5",
       "name": "imagenet/mobilenet_v3_large_075_224/feature_vector",
@@ -32,7 +32,7 @@
       "image_size": "224, 224",
       "vector_size": "1280"
     },
-  "../vectors/vectors_tensorflow_4.npy":
+  "../vectors/vectors_model_4.npy":
     {
       "link": "https://tfhub.dev/tensorflow/efficientnet/lite0/feature-vector/2",
       "name": "efficientnet/lite0/feature-vector",
@@ -43,7 +43,7 @@
       "image_size": "224, 224",
       "vector_size": "1280"
     },
-    "../vectors/vectors_google_5.npy":
+    "../vectors/vectors_model_5.npy":
     {
       "link": "https://tfhub.dev/google/imagenet/efficientnet_v2_imagenet21k_xl/feature_vector/2",
       "name": "imagenet/efficientnet_v2_imagenet21k_xl/feature_vector",
@@ -54,7 +54,7 @@
       "image_size": "512, 512",
       "vector_size": "1280"
     },
-  "../vectors/vectors_google_6.npy":
+  "../vectors/vectors_model_6.npy":
     {
       "link": "https://tfhub.dev/google/imagenet/efficientnet_v2_imagenet21k_b0/feature_vector/2",
       "name": "imagenet/efficientnet_v2_imagenet21k_b0/feature_vector",
@@ -65,7 +65,7 @@
       "image_size": "224, 224",
       "vector_size": "1280"
     },
-  "../vectors/vectors_google_7.npy":
+  "../vectors/vectors_model_7.npy":
     {
       "link": "https://tfhub.dev/google/imagenet/efficientnet_v2_imagenet21k_b1/feature_vector/2",
       "name": "imagenet/efficientnet_v2_imagenet21k_b1/feature_vector",

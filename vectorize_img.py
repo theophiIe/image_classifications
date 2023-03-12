@@ -75,10 +75,10 @@ if __name__ == '__main__':
         for f in files:
             os.remove(f)
 
-    np.save('./vectors/vectors_google_1.npy', extract_images_google_1)
-    np.save('./vectors/vectors_google_2.npy', extract_images_google_2)
-    np.save('./vectors/vectors_google_3.npy', extract_images_google_3)
-    np.save('./vectors/vectors_tensorflow_4.npy', extract_tensorflow_1)
-    np.save('./vectors/vectors_google_5.npy', extract_images_google_4)
-    np.save('./vectors/vectors_google_6.npy', extract_images_google_5)
-    np.save('./vectors/vectors_google_7.npy', extract_images_google_6)
+    np.save('./vectors/vectors_model_1.npy', extract_images_google_1)
+    np.save('./vectors/vectors_model_2.npy', extract_images_google_2)
+    np.save('./vectors/vectors_model_3.npy', extract_images_google_3)
+    np.save('./vectors/vectors_model_4.npy', extract_tensorflow_1)
+    np.save('./vectors/vectors_model_5.npy', extract_images_google_4)
+    np.save('./vectors/vectors_model_6.npy', extract_images_google_5)
+    np.save('./vectors/vectors_model_7.npy', extract_images_google_6)
